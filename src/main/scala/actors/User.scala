@@ -1,23 +1,27 @@
-import akka.actor.{Actor, ActorRef}
+package actors
+
+import akka.actor.{Actor, ActorLogging, ActorRef}
 import akka.event.Logging
 
+// @formatter:off
 object User {
   case class Connected(outgoing: ActorRef)
   case class IncomingMessage(text: String)
   case class OutgoingMessage(text: String)
 }
+// @formatter:on
 
-class User(receptionist: ActorRef) extends Actor {
+class User(receptionist: ActorRef) extends Actor with ActorLogging {
+
   import User._
-  val log = Logging(context.system, this)
 
   def receive = {
     case Connected(outgoing) =>
-      log.info("[User] New user connected")
+      log.info("[actors.User] New user connected")
       context.become(connected(outgoing))
 
     case OutgoingMessage(text) =>
-      log.info("[User] Sending [Outgoing] msg from top")
+      log.info("[actors.User] Sending [Outgoing] msg from top")
       receptionist ! Reception.Message(text)
   }
 
@@ -27,14 +31,15 @@ class User(receptionist: ActorRef) extends Actor {
     {
       case IncomingMessage(text) =>
         //TODO To be impl
-        log.info(s"[User] Incoming msg: $text")
+        log.info(s"[actors.User] Incoming msg: $text")
 
       case Reception.Message(text) =>
-        log.info("[User] Sending [Reception] msg from bottom")
+        log.info("[actors.User] Got Message from bottom")
+        log.info("[actors.User] Sending Message from bottom")
         outgoing ! OutgoingMessage(text)
 
       case OutgoingMessage(text) =>
-        log.info("[User] Sending [Outgoing] msg from bottom ")
+        log.info("[actors.User] Sending [Outgoing] msg from bottom ")
         receptionist ! Reception.Message(text)
     }
   }

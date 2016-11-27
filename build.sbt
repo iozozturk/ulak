@@ -1,13 +1,27 @@
+import sbt.Keys.javaOptions
+
 name := "ulak"
 
 version := "1.0"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.8"
+val akkaVersion = "2.4.13"
 
-libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream" % "2.4.12",
-  "com.typesafe.akka" %% "akka-actor" % "2.4.12",
-  "com.typesafe.akka" % "akka-http-core_2.11" % "3.0.0-RC1",
-  "com.typesafe.akka" %% "akka-http-experimental" % "2.4.11"
+val project = Project(
+  id = "ulak",
+  base = file(".")
+).settings(
+  libraryDependencies ++= Seq(
+    "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
+    "com.typesafe.akka" %% "akka-cluster-metrics" % akkaVersion,
+    "com.typesafe.akka" %% "akka-remote" % akkaVersion,
+    "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http" % "10.0.0",
+    "io.kamon" % "sigar-loader" % "1.6.6-rev002"
+  ),
+  javaOptions in run ++= Seq("-Xms128m", "-Xmx1024m", "-Djava.library.path=./target/native"),
+  Keys.fork in run := true,
+  mainClass in(Compile, run) := Some("Application")
 )
-    
