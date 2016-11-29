@@ -1,4 +1,4 @@
-package actors
+package actors.common
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -8,6 +8,6 @@ import akka.stream.ActorMaterializer
   */
 trait UlakSystem {
 
-  implicit val system = ActorSystem()
+  implicit val system = ActorSystem("dashboard")
   implicit val materializer = ActorMaterializer()
 }

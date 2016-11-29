@@ -3,16 +3,16 @@ package actors
 import akka.actor._
 import akka.cluster.ClusterEvent._
 import akka.cluster._
+import models.Member._
+import play.api.libs.json.Json._
+import play.api.libs.json.{JsObject, Json}
 
-/**
-  * @param out - the websocket to which we can push messages
-  */
 class MonitorActor(out: ActorRef) extends Actor with ActorLogging {
+  log.debug("IS UP")
 
   val cluster = Cluster(context.system)
 
-
-  // subscribe to cluster changes, re-subscribe when restart 
+  // subscribe to cluster changes, re-subscribe when restart
   override def preStart(): Unit = {
     cluster.subscribe(self, initialStateMode = InitialStateAsEvents,
       classOf[MemberEvent], classOf[UnreachableMember])
@@ -31,19 +31,19 @@ class MonitorActor(out: ActorRef) extends Actor with ActorLogging {
   }
 
   def handleMemberUp(member: Member) {
-    //    out ! (Json.obj("state" -> "up") ++ toJson(member).as[JsObject])
+    out ! (Json.obj("state" -> "up") ++ toJson(member).as[JsObject])
   }
 
   def handleUnreachable(member: Member) {
-    //    out ! (Json.obj("state" -> "unreachable") ++ toJson(member).as[JsObject])
+    out ! (Json.obj("state" -> "unreachable") ++ toJson(member).as[JsObject])
   }
 
   def handleRemoved(member: Member, previousStatus: MemberStatus) {
-    //    out ! (Json.obj("state" -> "removed") ++ toJson(member).as[JsObject])
+    out ! (Json.obj("state" -> "removed") ++ toJson(member).as[JsObject])
   }
 
   def handleExit(member: Member) {
-    //    out ! (Json.obj("state" -> "exit") ++ toJson(member).as[JsObject])
+    out ! (Json.obj("state" -> "exit") ++ toJson(member).as[JsObject])
   }
 
 }

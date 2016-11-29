@@ -1,7 +1,7 @@
 package actors
 
 import akka.actor.{Actor, ActorLogging, ActorRef}
-import akka.event.Logging
+import play.api.libs.json.Json
 
 // @formatter:off
 object User {
@@ -19,10 +19,6 @@ class User(receptionist: ActorRef) extends Actor with ActorLogging {
     case Connected(outgoing) =>
       log.info("[actors.User] New user connected")
       context.become(connected(outgoing))
-
-    case OutgoingMessage(text) =>
-      log.info("[actors.User] Sending [Outgoing] msg from top")
-      receptionist ! Reception.Message(text)
   }
 
   def connected(outgoing: ActorRef): Receive = {
@@ -31,16 +27,17 @@ class User(receptionist: ActorRef) extends Actor with ActorLogging {
     {
       case IncomingMessage(text) =>
         //TODO To be impl
-        log.info(s"[actors.User] Incoming msg: $text")
+        log.info(s"[User] Incoming msg: $text")
+        if ((Json.parse(text) \ "type").as[String] == "heartbeat")
+          outgoing ! OutgoingMessage(Json.obj("type" -> "heartbeat", "msg" -> "pong").toString())
 
       case Reception.Message(text) =>
-        log.info("[actors.User] Got Message from bottom")
-        log.info("[actors.User] Sending Message from bottom")
+        log.info(s"[User] Sending Message:$text")
         outgoing ! OutgoingMessage(text)
 
-      case OutgoingMessage(text) =>
-        log.info("[actors.User] Sending [Outgoing] msg from bottom ")
-        receptionist ! Reception.Message(text)
+      case t@_ =>
+        log.warning(s"[User] Unexpected msg type:$t")
+      //        receptionist ! Reception.Message(text)
     }
   }
 

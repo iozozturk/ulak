@@ -19,7 +19,8 @@ val project = Project(
     "com.typesafe.akka" %% "akka-remote" % akkaVersion,
     "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,
     "com.typesafe.akka" %% "akka-http" % "10.0.0",
-    "io.kamon" % "sigar-loader" % "1.6.6-rev002"
+    "io.kamon" % "sigar-loader" % "1.6.6-rev002",
+    "de.heikoseeberger" %% "akka-http-play-json" % "1.10.1"
   ),
   javaOptions in run ++= Seq("-Xms128m", "-Xmx1024m", "-Djava.library.path=./target/native"),
   Keys.fork in run := true,

@@ -1,6 +1,7 @@
 package sockets
 
-import actors.{ActorRegistry, Admin, UlakSystem}
+import actors.common.{ActorRegistry, UlakSystem}
+import actors.Admin
 import akka.NotUsed
 import akka.actor.{PoisonPill, Props}
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
