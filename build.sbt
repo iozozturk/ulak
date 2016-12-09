@@ -5,7 +5,7 @@ name := "ulak"
 version := "1.0"
 
 scalaVersion := "2.11.8"
-val akkaVersion = "2.4.13"
+val akkaVersion = "2.4.14"
 
 val project = Project(
   id = "ulak",

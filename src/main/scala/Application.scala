@@ -15,7 +15,7 @@ import scala.concurrent.duration.DurationLong
 object Application extends UlakSystem {
 
   def main(args: Array[String]): Unit = {
-    ActorRegistry.notifier
+    ActorRegistry.notificationActor
     val route =
       path("ulak") {
         get {
