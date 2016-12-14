@@ -29,10 +29,10 @@ object Application extends UlakSystem {
           }
         }
 
-    val binding = Await.result(Http().bindAndHandle(route, "127.0.0.1", 8080), 3.seconds)
+    val binding = Await.result(Http().bindAndHandle(route, "0.0.0.0", 8090), 3.seconds)
 
 //    system.scheduler.schedule(10.seconds, 5.seconds, ActorRegistry.reception, Reception.Message(Json.obj("key"->"value").toString()))
 
-    println("Started server at 127.0.0.1:8080")
+    println("Started server at 0.0.0.0:8090")
   }
 }
